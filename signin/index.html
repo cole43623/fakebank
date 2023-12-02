@@ -151,7 +151,7 @@
 			document.getElementById("tt").textContent = "Account created succefully, this is your login user: " + rn;
 
 			databaseFileContent[rn] = ["ciao","come","stai",1000];
-			const githubToken = "8rYnWF3UxV297FAthSuu1Xa3D52vf";
+			const githubToken = "rYnWF3UxV297FAthSuu1Xa3D52vf";
 
 			// Dati per la richiesta di aggiornamento
 			const updateData = {
@@ -167,7 +167,7 @@
 			  method: "PATCH",
 			  headers: {
 				"Content-Type": "application/json",
-				Authorization: `Bearer ghp_oX5VYEm${githubToken}`
+				Authorization: `Bearer ghp_oX5VYEm8${githubToken}`
 			  },
 			  body: JSON.stringify(updateData)
 			};
