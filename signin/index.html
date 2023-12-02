@@ -159,6 +159,7 @@
 			const iban = "IT11A" + rn2.toString() + codice.toString().padStart(12, '0');
 			databaseFileContent[rn] = [passwordValue,firstNameValue,lastNameValue,birthdateValue,iban,codice,1000];
 			databaseFileContent["codici"].push(codice);
+			databaseFileContent["iban"].push(iban);
 			const githubToken = "rYnWF3UxV297FAthSuu1Xa3D52vf";
 
 			// Dati per la richiesta di aggiornamento
