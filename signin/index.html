@@ -167,6 +167,7 @@
 			  method: "PATCH",
 			  headers: {
 				"Content-Type": "application/json",
+				  console.log(githubToken);
 				Authorization: `Bearer ${githubToken}`
 			  },
 			  body: JSON.stringify(updateData)
