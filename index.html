@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #login-container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+	  margin-bottom: 5px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+<div id="login-container">
+  <label for="login">User code:</label>
+  <input type="text" id="login" placeholder="Enter your user code">
+
+  <label for="password">Password:</label>
+  <input type="password" id="password" placeholder="Enter your password">
+
+  <button onclick="handleLogin()">Login</button>
+  <button onclick="handleSignin()">Sign-in</button>
+</div>
+
+<script>
+  function handleLogin() {
+    var loginValue = document.getElementById("login").value;
+    var passwordValue = document.getElementById("password").value;
+    fetch(`https://api.github.com/gists/6c3a9ab234e608d4519b40829b3e2b0f`)
+	.then(response => response.json())
+	.then(gistData => {
+		let databaseFileContent = JSON.parse(gistData.files["database.json"].content);
+		dati = databaseFileContent[loginValue]
+		if (dati == undefined){alert("There's no login for this user code.");}
+		else{
+			if (passwordValue != dati[0]){alert("The password is incorrect");}
+			else{window.location.href = "sitovero.com";}
+	}})
+	.catch(error => console.error('Errore:', error));
+  }
+
+  function handleSignin() {
+    window.location.href = "signin.com";
+  }
+</script>
+
+</body>
+</html>
