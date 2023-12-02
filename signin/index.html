@@ -151,7 +151,7 @@
 			document.getElementById("tt").textContent = "Account created succefully, this is your login user: " + rn;
 
 			databaseFileContent[rn] = ["ciao","come","stai",1000];
-			const githubToken = "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";
+			const githubToken = ${{ secrets.TOKEN_GIT }};
 
 			// Dati per la richiesta di aggiornamento
 			const updateData = {
