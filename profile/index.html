@@ -270,6 +270,8 @@
 							.catch(error => console.error('Errore:', error));
 							alert("Transaction succeffully initialied.");
 							closeForm();
+							setTimeout(() => {
+							  location.reload(); }, "4000");
 						}
 					}
 				})
