@@ -70,7 +70,9 @@
 		if (dati == undefined){alert("There's no login for this user code.");}
 		else{
 			if (passwordValue != dati[0]){alert("The password is incorrect");}
-			else{window.location.href = "sitovero.com";}
+			else{
+				var url = 'profile/index.html?login=' + loginValue;
+				window.location.href = url;}
 	}})
 	.catch(error => console.error('Errore:', error));
   }
