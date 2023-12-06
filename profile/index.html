@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .profile-info, .balance, .transaction-button {
+            margin-bottom: 20px;
+        }
+
+        .profile-info span, .balance span {
+            font-weight: bold;
+        }
+
+        .transaction-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .transaction-button:hover {
+            background-color: #0056b3;
+        }
+		
+		#iban {
+			cursor: pointer;
+			font-weight: normal;
+			transition: font-weight 0.3s ease; /* Smooth transition effect */
+		}
+
+		#name {
+			font-weight: normal;
+		}
+		#datac {
+			font-weight: normal;
+		}
+		#accountNumber {
+			font-weight: normal;
+		}
+		#balance {
+			font-weight: normal;
+		}
+		#iban:hover {
+			font-weight: bold;
+		}
+		
+		
+        .form-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 5; /* the overlay is on top of other elements */
+        }
+
+        .form-container {
+            width: 300px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .close-button {
+            position: relative;
+			width: 1px;
+            top: -5px;
+			right: -290px;
+            cursor: pointer;
+            font-size: 18px;
+            color: red;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .confirm-button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .confirm-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bank Profile</h1>
+
+        <div class="profile-info">
+            <p><span>Full Name:</span> <span id="name"></span></p>
+            <p><span>Birthday:</span> <span id="datac"></span></p>
+            <p><span>Account Number:</span> <span id="accountNumber"></span></p>
+			<p><span>IBAN:</span> <span id="iban" onclick="copia()"></span></p>
+        </div>
+
+        <div class="balance">
+            <p><span>Balance:</span> <span id="balance"></span></p>
+        </div>
+
+        <button class="transaction-button" onclick="makeTransaction()">Make Transaction</button>
+    </div>
+    <div class="form-overlay">
+        <div class="form-container">
+            <div class="close-button" onclick="closeForm()">X</div>
+            <input type="text" placeholder="Enter IBAN" id="ibanTo">
+            <input type="number" placeholder="Enter amount" id="amount">
+            <button class="confirm-button" onclick="confirmAction()">Confirm</button>
+        </div>
+    </div>
+
+
+    <script>
+			var regex = new RegExp('[?&]' + 'login' + '(=([^&#]*)|&|#|$)'),
+				results = regex.exec(window.location.href);
+			var loginValue =  decodeURIComponent(results[2].replace(/\+/g, ' '));
+
+			let dati;
+			
+			function formatFloatString(number) {
+			
+				const [integerPart, decimalPart] = number.toFixed(2).split('.');
+
+				// Format the integer part with commas
+				const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+				// Combine the formatted parts with a period for the decimal part
+				const formattedNumber = `${formattedIntegerPart}.${decimalPart}`;
+
+				return formattedNumber;
+			}
+
+
+			fetch(`https://api.github.com/gists/6c3a9ab234e608d4519b40829b3e2b0f`)
+			.then(response => response.json())
+			.then(gistData => {
+				let databaseFileContent = JSON.parse(gistData.files["database.json"].content);
+				dati = databaseFileContent[loginValue];
+				document.getElementById("name").innerText = dati[1] +' ' + dati[2];
+				document.getElementById("datac").innerText = dati[3];
+				document.getElementById("accountNumber").innerText = dati[5];
+				document.getElementById("iban").innerText = dati[4];
+				document.getElementById("balance").innerText = formatFloatString(dati[6]) + ' €';
+				})
+			.catch(error => console.error('Errore:', error));
+			
+			
+			function closeForm() {
+						document.querySelector('.form-overlay').style.display = 'none';
+					}
+			
+			function makeTransaction() {
+					document.querySelector('.form-overlay').style.display = 'flex';
+			}
+			
+			function copia(){
+			fetch(`https://api.github.com/gists/6c3a9ab234e608d4519b40829b3e2b0f`)
+			.then(response => response.json())
+			.then(gistData => {
+				let databaseFileContent = JSON.parse(gistData.files["database.json"].content);
+				dati = databaseFileContent[loginValue];
+				navigator.clipboard.writeText(dati[4]);
+				alert("iban copied");
+				})
+			.catch(error => console.error('Errore:', error));}
+
+			function confirmAction() {
+			var ibanTo = document.getElementById("ibanTo").value;
+			var amount = document.getElementById("amount").value;
+			if (amount>=0.01){
+				fetch(`https://api.github.com/gists/6c3a9ab234e608d4519b40829b3e2b0f`)
+				.then(response => response.json())
+				.then(gistData => {
+					let databaseFileContent = JSON.parse(gistData.files["database.json"].content);
+					dati = databaseFileContent[loginValue];
+					if (ibanTo == dati[4]){alert("Error: You cannot make a transfer to your own account.");}
+					else{
+						if (amount>dati[6]){alert("Error: Insufficient funds for the transaction.");}
+						else{
+							
+							fetch(`https://api.github.com/gists/6c3a9ab234e608d4519b40829b3e2b0f`)
+							.then(response => response.json())
+							.then(gistData => {
+								let databaseFileContent = JSON.parse(gistData.files["database.json"].content);
+								databaseFileContent[loginValue.toString()][6]-=parseFloat(amount);
+								if (databaseFileContent["iban"].includes(ibanTo)){
+									for (var chiave in databaseFileContent) {
+										if (chiave!='codici' && chiave!='iban' && databaseFileContent[chiave][4]==ibanTo){
+										  console.log(typeof databaseFileContent[chiave][6]);
+										  databaseFileContent[chiave][6] += parseFloat(amount);
+										  console.log(typeof databaseFileContent[chiave][6]);
+										  break;
+										}
+									}
+								}
+								
+								const githubToken = "rYnWF3UxV297FAthSuu1Xa3D52vf";
+								// Dati per la richiesta di aggiornamento
+								const updateData = {
+								  files: {
+									"database.json": {content: JSON.stringify(databaseFileContent, null, 2)}
+								  }
+								};
+
+								// Configurazione della richiesta
+								const requestOptions = {
+								  method: "PATCH",
+								  headers: {
+									"Content-Type": "application/json",
+									Authorization: `Bearer ghp_oX5VYEm8${githubToken}`
+								  },
+								  body: JSON.stringify(updateData)
+								};
+
+								// Esegui la richiesta di aggiornamento
+								fetch(`https://api.github.com/gists/6c3a9ab234e608d4519b40829b3e2b0f`, requestOptions)
+								  .then(response => {
+									if (!response.ok) {
+									  throw new Error(`Errore nella richiesta di aggiornamento: ${response.statusText}`);
+									}
+									return response.json();
+								  })
+								  .then(updatedGist => {
+									console.log("Gist aggiornato con successo:", updatedGist);
+								  })
+								  .catch(error => console.error("Errore:", error));
+								
+							})
+							.catch(error => console.error('Errore:', error));
+							alert("Transaction succeffully initialied.");
+							closeForm();
+						}
+					}
+				})
+				.catch(error => console.error('Errore:', error));
+				}
+			}
+
+    </script>
+</body>
+</html>
